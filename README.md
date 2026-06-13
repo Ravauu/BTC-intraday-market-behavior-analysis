@@ -1,121 +1,68 @@
 # BTC Intraday Market Behavior Analyzer
 
-Excel VBA dashboard analyzing BTC 5-minute intraday market behavior, volatility, volume, market sessions, candle structure and hourly activity using Binance futures data.
+Excel VBA project analyzing BTC 5-minute intraday market behavior using Binance futures data.
 
-This project is not a trading strategy.  
-The goal is to demonstrate data analysis, Excel reporting, pivot tables, dashboard design and VBA automation skills.
+The goal of this project is not to build a trading strategy.
+The purpose is to demonstrate practical data analysis, Excel reporting, pivot table analysis, dashboard design and VBA automation skills.
 
 ## Project Overview
 
-The workbook analyzes BTC intraday market behavior using 5-minute Binance futures data from January 2025 to April 2026.
+This project analyzes how BTC behaves during different parts of the trading day.
+The dataset contains 5-minute market data from January 2025 to April 2026, with approximately 139,680 intraday candles and around 485 trading days.
 
-The analysis focuses on:
-
-- intraday volatility,
-- session-based market activity,
-- volume distribution,
-- candle structure,
-- hourly behavior,
-- taker buy share,
-- automated dashboard generation with VBA.
+The analysis focuses on volatility, volume, market sessions, candle structure, hourly activity and taker buy activity. The final result is an automated Excel dashboard generated with VBA.
 
 ## Dataset
 
-- Instrument: BTCUSD_PERP
-- Source: Binance futures data
-- Timeframe: 5 minutes
-- Period: 2025-01 to 2026-04
-- Records: approximately 139,680 5-minute candles
-- Daily observations: approximately 485 days
+The project uses Binance futures data for `BTCUSD_PERP` on a 5-minute timeframe.
 
-The dataset contains OHLCV data, trade count and taker buy volume fields.
+The dataset includes price data, volume, trade count and taker buy activity fields. Based on these raw fields, additional analytical columns were created to measure candle range, candle body, close position, taker buy share and session behavior.
+
+The analysis is based on relative market behavior across sessions and hours, not on building buy/sell signals.
 
 ## Workbook Structure
 
-| Sheet | Description |
-|---|---|
-| `BtcData` | Cleaned 5-minute BTC data with calculated candle metrics |
-| `DailyData` | Daily aggregated market behavior metrics |
-| `DailyAverages` | Daily summary tables and bucket analysis |
-| `DailyPivot` | Pivot tables and charts based on daily metrics |
-| `SessionData` | Session-level aggregation by date and market session |
-| `PivotSessions` | Pivot tables and charts for intraday/session analysis |
-| `Dashboard` | Final dashboard generated automatically with VBA |
+The workbook is organized into separate sheets for raw data, transformed data, pivot analysis and the final dashboard.
 
-## Key Metrics
+`BtcData` contains the cleaned 5-minute dataset with calculated candle-level metrics.
+`DailyData` aggregates the intraday data into daily market behavior metrics.
+`DailyAverages` and `DailyPivot` are used for daily-level summaries, buckets and pivot charts.
+`SessionData` aggregates the market into four UTC-based sessions: Asia, London, New York and AfterHours.
+`PivotSessions` contains the pivot tables and charts used in the final dashboard.
+`Dashboard` is the final reporting layer generated automatically with VBA.
 
-### 5-minute candle metrics
+## Methodology
 
-- Candle Range
-- Candle Range %
-- Candle Body
-- Candle Body %
-- Candle Close Position
-- Candle Taker Buy Share
-- Candle Direction
-- Body-to-Range Ratio
-- Candle Type
-- Market Session
+The analysis was built in several steps.
 
-### Daily metrics
+First, the raw 5-minute data was cleaned and extended with calculated fields such as candle range, candle body, range percentage, close position and taker buy share. Division-by-zero handling was added to avoid errors in pivot tables.
 
-- Daily Range
-- Daily Range %
-- Daily Body %
-- Close Position Daily
-- Close Strength
-- Range Bucket
-- Volume Bucket
-- Daily Quote Volume
-- Daily Trade Count
-- Daily Taker Buy Share
-- Daily Dollar Volume
+Next, the data was aggregated into daily metrics to understand how daily volatility, volume and close position behave together. This allowed the project to compare high-range, normal-range and low-range days.
 
-### Session metrics
+Then, the same intraday dataset was grouped into market sessions. Each session represents one date and one market period. For each session, open, high, low, close, range, volume, trade count and taker buy share were calculated.
 
-Each session row represents one day and one market session.
+Finally, pivot tables and charts were created from the daily and session-level data. The dashboard was then automated with VBA, so the report layout, KPI cards and chart cards can be recreated from the macro.
 
-Sessions:
+## Market Sessions
 
-- Asia: 00:00-07:59 UTC
-- London: 08:00-12:59 UTC
-- New York: 13:00-20:59 UTC
-- AfterHours: 21:00-23:59 UTC
+The session split is based on UTC time:
 
-Session metrics include:
+| Session    | UTC Hours   |
+| ---------- | ----------- |
+| Asia       | 00:00-07:59 |
+| London     | 08:00-12:59 |
+| New York   | 13:00-20:59 |
+| AfterHours | 21:00-23:59 |
 
-- Session Open
-- Session High
-- Session Low
-- Session Close
-- Session Range
-- Session Range %
-- Session Quote Volume
-- Session Trade Count
-- Session Taker Buy Quote Volume
-- Session Taker Buy Share
+This split allows the project to compare volatility and activity across different parts of the global trading day.
 
 ## Dashboard
 
 The dashboard is generated automatically using VBA.
 
-It includes:
+It includes KPI cards, session volatility charts, session volume charts, hourly volatility charts, hourly volume charts and candle structure analysis by market session.
 
-- KPI cards,
-- session volatility chart,
-- session volume chart,
-- hourly volatility chart,
-- hourly volume chart,
-- candle type structure by market session.
-
-Main KPIs:
-
-- Total Days
-- Total 5m Candles
-- Average Daily Range %
-- Average 5m Range %
-- Most Volatile Session
-- Highest Volume Session
+Main dashboard KPIs include total analyzed days, total 5-minute candles, average daily range, average 5-minute range, most volatile session and highest volume session.
 
 ## Dashboard Screenshots
 
@@ -125,27 +72,77 @@ Main KPIs:
 
 ## VBA Automation
 
-The dashboard layout is created by the `CreateDashboardLayout` macro.
+The main macro used in the project is `CreateDashboardLayout`.
 
-The macro:
+The macro creates or clears the dashboard sheet, removes old shapes, applies the background design, creates the title card, builds KPI cards, calculates KPI values with Excel formulas, copies charts from the pivot sheet and embeds them into styled dashboard cards.
 
-- creates or clears the Dashboard sheet,
-- removes old shapes,
-- sets the dashboard background,
-- creates the title card,
-- creates KPI label cards,
-- calculates KPI values using formulas,
-- copies charts from `PivotSessions`,
-- embeds charts inside styled dashboard cards.
+The VBA code was refactored into helper procedures to avoid repeating the same formatting logic multiple times.
 
-The VBA code was refactored into helper procedures:
+Main procedures:
 
-- `AddTitleCard`
-- `AddKPILabelCard`
-- `AddKPIValueCard`
-- `AddChartCard`
+```text
+CreateDashboardLayout
+AddTitleCard
+AddKPILabelCard
+AddKPIValueCard
+AddChartCard
+```
 
-The source VBA module is available here:
+The VBA module is available in:
 
 ```text
 vba/modDashboard.bas
+```
+
+## Key Findings
+
+The analysis showed that BTC intraday activity was not evenly distributed across the day. The New York session was the strongest session in terms of both average session range and total session volume. This suggests that the most active part of the BTC trading day, during the analyzed period, was concentrated around US trading hours.
+
+Hourly analysis confirmed this pattern. The highest volatility and volume appeared around 14-15 UTC, which was the most active part of the day in the dataset. This period stood out both in terms of average 5-minute range and total quote volume.
+
+Daily analysis showed that high-range days were usually supported by at least normal or high volume. In the analyzed dataset, high-range days did not appear together with low volume. This suggests that larger daily moves were connected with stronger market participation.
+
+Most days were not extreme. Normal range and normal volume conditions dominated the dataset, which shows that high-volatility days were only a subset of the full period rather than the default market state.
+
+Another important finding was that large daily range did not automatically mean a clean directional day. Some high-range days closed near the middle of the daily range, meaning that strong volatility often included two-sided movement instead of a simple trend from open to close.
+
+Taker Buy Share stayed close to balanced levels across sessions and hours. This means that the dataset did not show a strong and persistent aggressive buy-side dominance during the analyzed period.
+
+The New York session had the highest volatility and volume, but it did not have the highest share of directional candles. This distinction is important because higher activity does not always mean cleaner candle structure.
+
+## Tools Used
+
+* Microsoft Excel
+* VBA
+* Excel Tables
+* Pivot Tables
+* Pivot Charts
+* Binance futures data
+
+## Repository Structure
+
+```text
+BTC-intraday-market-behavior-analysis/
+│
+├── README.md
+├── BTC_Intraday_Market_Behavior_Analyzer.xlsm
+│
+├── screenshots/
+│   ├── dashboard_overview_top.png
+│   └── dashboard_overview_bottom.png
+│
+└── vba/
+    └── modDashboard.bas
+```
+
+## Main File
+
+```text
+BTC_Intraday_Market_Behavior_Analyzer.xlsm
+```
+
+## Purpose
+
+This project was created as a portfolio project for Excel, VBA and Data Analyst roles.
+
+It demonstrates the ability to work with a large time-series dataset, create analytical metrics, aggregate data at different levels, build pivot-based analysis, design a dashboard and automate report generation with VBA.
