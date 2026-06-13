@@ -2,7 +2,6 @@
 
 Excel VBA project analyzing BTC 5-minute intraday market behavior using Binance futures data.
 
-The goal of this project is not to build a trading strategy.
 The purpose is to demonstrate practical data analysis, Excel reporting, pivot table analysis, dashboard design and VBA automation skills.
 
 ## Project Overview
@@ -140,9 +139,3 @@ BTC-intraday-market-behavior-analysis/
 ```text
 BTC_Intraday_Market_Behavior_Analyzer.xlsm
 ```
-
-## Purpose
-
-This project was created as a portfolio project for Excel, VBA and Data Analyst roles.
-
-It demonstrates the ability to work with a large time-series dataset, create analytical metrics, aggregate data at different levels, build pivot-based analysis, design a dashboard and automate report generation with VBA.
